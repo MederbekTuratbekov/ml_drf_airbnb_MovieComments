@@ -1,4 +1,3 @@
-from django.template.defaulttags import comment
 from rest_framework import serializers
 from .models import UserProfile, City, Property, Images, Booking, Review, Favorite, FavoriteItem, Amenity
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -101,7 +100,7 @@ class PropertySerializers(serializers.ModelSerializer):
         return obj.get_count_reviews()
 
 class ReviewListSerializers(serializers.ModelSerializer):
-    created_at = serializers.DateTimeField(format('%d-%m-%Y %H:%M'))
+    created_at = serializers.DateTimeField(format='%d-%m-%Y %H:%M')
     guest = UserProfilePublicDateSerializers(read_only=True)
     property = PropertySerializers(read_only=True)
     check_comments = serializers.SerializerMethodField()
@@ -122,7 +121,7 @@ class PropertyDetailSerializers(serializers.ModelSerializer):
     city = CitySerializers(read_only=True)
     images = ImageSerializers(many=True, read_only=True, source='images_set')
     amenities = AmenitySerializers(read_only=True, many=True, source='amenity_set')
-    reviews = ReviewListSerializers(read_only=True, many=True, source='reviews_set')
+    reviews = ReviewListSerializers(read_only=True, many=True, source='reviews')
     count_reviews = serializers.SerializerMethodField()
     avg_rating = serializers.SerializerMethodField()
     class Meta:
@@ -149,7 +148,7 @@ class PropertyCreateSerializers(serializers.ModelSerializer):
     owner = UserProfilePublicDateSerializers(read_only=True)
     city = CitySerializers(read_only=True)
     images = ImageSerializers(many=True, read_only=True, source='images_set')
-    reviews = ReviewListSerializers(read_only=True, many=True, source='reviews_set')
+    reviews = ReviewListSerializers(read_only=True, many=True, source='reviews')
     class Meta:
         model = Property
         fields = ['images', 'owner', 'title', 'description', 'price_per_night', 'city', 'address', 'property_type',
@@ -158,8 +157,8 @@ class PropertyCreateSerializers(serializers.ModelSerializer):
 class BookingListSerializers(serializers.ModelSerializer):
     guest = UserProfileSerializers(read_only=True)
     property = PropertySerializers(read_only=True)
-    created_at = serializers.DateTimeField(format('%d-%m-%Y %H:%M'))
-    check_in = serializers.DateTimeField(format('%d-%m-%Y %H:%M'))
+    created_at = serializers.DateTimeField(format='%d-%m-%Y %H:%M')
+    check_in = serializers.DateTimeField(format='%d-%m-%Y %H:%M')
     check_out = serializers.DateTimeField(format='%d-%m-%Y %H:%M')
     class Meta:
         model = Booking

@@ -91,7 +91,7 @@ class Review(models.Model):
     rating = models.PositiveIntegerField(choices=[(i, str(i))for i in range(1, 6)])
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='reviews_set')
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='reviews')
     guest = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
 
     def __str__(self):

@@ -1,17 +1,14 @@
 from rest_framework import permissions
 
 
-class CheckOwnerRoleReviews(permissions.BasePermission):
+class IsOwner(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.role == 'owner':
-            return False
-        return True
+        return request.user.role == 'owner'
 
-class CheckGuestRoleReviews(permissions.BasePermission):
+
+class IsGuest(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.user.role == 'guest':
-            return False
-        return True
+        return request.user.role == 'guest'
 
 class CheckAdminRoleReviews(permissions.BasePermission):
     def has_permission(self, request, view):

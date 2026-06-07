@@ -1,7 +1,7 @@
 from django.core.serializers import serialize
 from rest_framework import generics, permissions, views, status
 from .filters import PropertyFilter
-from .permissions import CheckOwnerRoleReviews, CheckGuestRoleReviews, CheckAdminRoleReviews
+from .permissions import IsOwner, IsGuest
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
@@ -63,7 +63,7 @@ class UserProfileUpdateAPIView(generics.UpdateAPIView):
         return UserProfile.objects.filter(id=self.request.user.id)
 
 class PropertyListAPIView(generics.ListAPIView):
-    queryset = Property.objects.all().select_related('city').prefetch_related('reviews_set')
+    queryset = Property.objects.all().select_related('city').prefetch_related('reviews')
     serializer_class = PropertySerializers
 
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -79,13 +79,16 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
 class PropertyCreateAPIView(generics.CreateAPIView):
     serializer_class = PropertyCreateSerializers
 
-    permission_classes = [permissions.IsAuthenticated, CheckOwnerRoleReviews]
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
 class PropertyUpdateAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertyUpdateSerializers
 
-    permission_classes = [permissions.IsAuthenticated, CheckOwnerRoleReviews]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     def get_queryset(self):
         return Property.objects.filter(owner=self.request.user)
 
@@ -96,12 +99,18 @@ class BookingListAPIView(generics.ListAPIView):
 class BookingCreateAPIView(generics.CreateAPIView):
     serializer_class = BookingCreateSerializers
 
-    permission_classes = [permissions.IsAuthenticated, CheckGuestRoleReviews]
+    def perform_create(self, serializer):
+        serializer.save(guest=self.request.user)
+
+    permission_classes = [permissions.IsAuthenticated, IsGuest]
 
 class ReviewCreateAPIView(generics.CreateAPIView):
     serializer_class = ReviewCreateSerializers
 
-    permission_classes = [permissions.IsAuthenticated, CheckGuestRoleReviews]
+    def perform_create(self, serializer):
+        serializer.save(guest=self.request.user)
+
+    permission_classes = [permissions.IsAuthenticated, IsGuest]
 
 class FavoriteItemListAPIView(generics.ListAPIView):
     serializer_class = FavoriteItemListSerializer
