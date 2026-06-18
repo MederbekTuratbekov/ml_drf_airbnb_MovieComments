@@ -7,10 +7,10 @@ from django.conf import settings
 import os
 
 
-model_path = os.path.join(settings.BASE_DIR, 'model_nb.pkl')
+model_path = os.path.join(settings.BASE_DIR, 'model_nb_MovieComments.pkl')
 model = joblib.load(model_path)
 
-vector_path = os.path.join(settings.BASE_DIR, 'vector.pkl')
+vector_path = os.path.join(settings.BASE_DIR, 'vector_MovieComments.pkl')
 vector = joblib.load(vector_path)
 
 class UserSerializer(serializers.ModelSerializer):
@@ -121,7 +121,7 @@ class PropertyDetailSerializers(serializers.ModelSerializer):
     city = CitySerializers(read_only=True)
     images = ImageSerializers(many=True, read_only=True, source='images_set')
     amenities = AmenitySerializers(read_only=True, many=True, source='amenity_set')
-    reviews = ReviewListSerializers(read_only=True, many=True, source='reviews')
+    reviews = ReviewListSerializers(read_only=True, many=True)
     count_reviews = serializers.SerializerMethodField()
     avg_rating = serializers.SerializerMethodField()
     class Meta:

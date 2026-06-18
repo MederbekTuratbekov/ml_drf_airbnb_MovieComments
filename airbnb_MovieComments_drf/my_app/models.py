@@ -60,13 +60,13 @@ class Property(models.Model):
         return f'{self.title}, {self.city}, {self.property_type}, {self.price_per_night}$'
 
     def get_avg_rating(self):
-        rating=self.reviews_set.all()
+        rating = self.reviews.all()
         if rating.exists():
-            return round(sum([i.rating for i in rating]) / rating.count(),1)
+            return round(sum([i.rating for i in rating]) / rating.count(), 1)
         return 0
 
     def get_count_reviews(self):
-        return self.reviews_set.count()
+        return self.reviews.count()
 
 class Images(models.Model):
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='images_set')
@@ -117,26 +117,3 @@ class Amenity(models.Model):
 
     def __str__(self):
         return f'{self.name_amenity}, {self.icon_amenity}'
-
-
-
-
-
-# ушуларды кошуш керек:
-    # пользователь:
-        # Оставить отзыв на жильё после завершённого бронирования.
-        # История бронирований пользователья
-        # Просмотр входящих запросов на аренду.
-        # Бронирование доступных объектов.
-
-    # owner
-        # Активация/деактивация объектов.
-        # Просмотр и управление бронированиями. (хост подтверждает/отказ) а путь bookings должен показать статус ожидание/забронирован/отказ
-
-    # Функции для администраторов
-        # Управление пользователями:
-            # Блокировка и удаление аккаунтов.
-        # Модерация объявлений:
-            # Проверка и одобрение объектов.
-        # Статистика:
-            # Просмотр количества активных бронирований, пользователей, доходов и популярных локаций.
