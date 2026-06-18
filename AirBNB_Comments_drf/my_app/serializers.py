@@ -7,10 +7,10 @@ from django.conf import settings
 import os
 
 
-model_path = os.path.join(settings.BASE_DIR, 'model_nb_MovieComments.pkl')
+model_path = os.path.join(settings.BASE_DIR, 'model_nb_airbnb_comments.pkl')
 model = joblib.load(model_path)
 
-vector_path = os.path.join(settings.BASE_DIR, 'vector_MovieComments.pkl')
+vector_path = os.path.join(settings.BASE_DIR, 'vector_airbnb_comments.pkl')
 vector = joblib.load(vector_path)
 
 class UserSerializer(serializers.ModelSerializer):
